@@ -37,7 +37,7 @@ export function useGetFungibleAssetBalances(accountAddress: string) {
   return useQuery({
     queryKey: ["nodit-indexer-api", accountAddress],
     refetchInterval: false,
-    enabled: !accountAddress,
+    enabled: accountAddress.length > 0,
     queryFn: async () => {
       try {
         if (!accountAddress) return null;
