@@ -10,8 +10,8 @@ import { useToast } from "@/components/ui/use-toast";
 
 function FungibleAssetBalances() {
   const [address, setAddress] = useState("");
-  const { data: balancesQuery, isLoading } = useGetFungibleAssetBalances(address);
-  const balances = balancesQuery || [];
+  const { data, isLoading } = useGetFungibleAssetBalances(address);
+  const balances = data || [];
   const { toast } = useToast();
 
   useEffect(() => {
