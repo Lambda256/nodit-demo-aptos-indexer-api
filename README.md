@@ -3,107 +3,82 @@
 This tutorial will guide you through creating a simple Dapp using Nodit, leveraging [Aptos Lab's boilerplate](https://aptos.dev/en/build/create-aptos-dapp/templates/boilerplate).
 You can customize and adapt this template to fit your project needs!
 
-## Pre-requisites
+## Prerequisites
 
-Before starting this tutorial, please ensure you have completed the following steps:
+Before starting this tutorial, please ensure you have completed the followings:
 
-1. [Sign up for Nodit](https://id.lambda256.io/signup) and create your project. (The first project will be created automatically upon completing the onboarding process.)
-2. Ensure your project is connected to the Aptos Nodes (Mainnet and Testnet).
-3. Copy your project’s API key.
+1. [Node.js](https://nodejs.org/en/download/package-manager)
+   - version >= v20
+   - Recommended version: latest LTS
+2. Nodit project
+   - [Sign up for Nodit](https://id.lambda256.io/signup)
+   - Create your project. (The first project will be created automatically upon completing the onboarding process.)
+   - Ensure your project is connected to the Aptos Nodes (Mainnet and Testnet).
 
-## How to use Nodit
+## Getting Started
 
-### Configure the `.env` File
+Follow these steps to set up your Dapp with Nodit:
 
-The .env file holds the necessary configuration for this tutorial.
-You can choose the Aptos network, which must be either **mainnet** or **testnet**. (Note that devnet is not supported in Nodit.)
-Insert your Nodit API key into this file as `VITE_API_KEY`.
+### 1. Clone the Repository
 
-```
-PROJECT_NAME=build-dapp-using-nodit
-
-# NOTE: Select Aptos network(miannet or testnet)
-VITE_APP_NETWORK=
-
-# NOTE: Input your NODIT API key here
-VITE_API_KEY=
+```sh
+git clone https://github.com/yourusername/nodit-demo-aptos-indexer-api.git
+cd nodit-demo-aptos-indexer-api
 ```
 
-### Modify `/frontend/utils/aptosClient.ts`
+### 2. Install Dependencies
 
-If you are using the Aptos SDK, you need to configure the Aptos instance settings.
-Update the fullnode and indexer endpoints in this configuration file.
-By doing this, you can seamlessly integrate Nodit while using the Aptos SDK.
+Navigate to the project directory and install the required packages:
 
-In this tutorial, once the environment variables are set in .env, no further changes are required in this file.
-
-```ts
-...
-
-// NOTE: Set fullnode endpoint and indexer endpoint here
-const aptos = new Aptos(
-  new AptosConfig({
-    network: NETWORK,
-    fullnode: `https://aptos-${NETWORK}.nodit.io/${API_KEY}/v1`,
-    indexer: `https://aptos-${NETWORK}.nodit.io/${API_KEY}/v1/graphql`,
-  }),
-);
-
-...
+```sh
+npm install
 ```
 
-### Example: Querying Fungible Asset Balances using Indexer API, `/frontend/hooks/useGetFungibleAssetBalances.ts`
+### 3. Configure Environment Variables
 
-This tutorial includes an example of querying fungible asset balances for a specific account using the indexer API.
-The provided hook, `useGetFungibleAssetBalances.ts`, demonstrates how to utilize the indexer API in your project.
+Create a .env file in the root directory and set up the following environment variables:
 
-```ts
-...
-        // NOTE: You can change "query" field as you want
-        const res = await aptosClient().queryIndexer<QueryResult>({
-          query: {
-            variables: {
-              accountAddress: accountAddress,
-            },
-            query: `
-              query FA_Balances($accountAddress: String) {
-                current_fungible_asset_balances(
-                  limit: 10
-                  offset: 0
-                  where: {
-                    owner_address: {
-                      _eq: $accountAddress
-                    }
-                  }
-                ) {
-                  owner_address
-                  amount
-                  storage_id
-                  last_transaction_version
-                  last_transaction_timestamp
-                  is_frozen
-                  metadata {
-                    asset_type
-                    creator_address
-                    decimals
-                    icon_uri
-                    name
-                    project_uri
-                    symbol
-                    token_standard
-                    maximum_v2
-                    supply_v2
-                  }
-                }
-              }`,
-          },
-        });
+```sh
+touch .env
 ```
 
-### Pages
+In the .env file, add:
 
-- **FungibleAssetBalances** - A page to search all the fungible assets balances owned by specific account.
+```sh
+PROJECT_NAME=your-dapp-name
+VITE_APP_NETWORK=mainnet # or testnet
+VITE_API_KEY=your-nodit-api-key
+```
 
-### Commands
+Replace `your-dapp-name` and `your-nodit-api-key` with your actual project name and API key.
 
-- `npm run dev` - a command to run dapp in the local environment
+### 4. Run the Development Server
+
+Start the development server to see your Dapp in action:
+
+```
+npm run dev
+```
+
+### 5. Explore the Dapp
+
+After running the development server, open your browser and go to `http://localhost:PORT_NUM`. You can now interact with the Dapp and explore its functionalities.
+
+## Customizing Your Dapp
+
+This boilerplate provides a great starting point for your Dapp. You can customize it further to meet your specific project requirements. Consider exploring the following:
+
+- Front-end Design: Customize the UI to match your brand.
+- Smart Contracts: Integrate your own smart contracts or modify existing ones.
+- API Integrations: Use the Nodit Indexer API to fetch and display blockchain data.
+
+## Additional Resources
+
+- [Nodit Documentation](https://developer.nodit.io/docs/)
+- [Aptos Labs](https://aptos.dev/en)
+- [Aptos SDK](https://aptos.dev/en/build/sdks)
+- [Aptos create-aptos-dapp](https://aptos.dev/en/build/create-aptos-dapp)
+
+## Contributing
+
+If you’d like to contribute to this project, please fork the repository and create a pull request. We welcome all contributions!
